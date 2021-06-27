@@ -1,6 +1,7 @@
 import time
 import torch
 from torch import nn
+import torchvision.models as models
 import torch.utils.data as Data
 def init_W(L):
     if type(L) == nn.Linear or type(L) == nn.Conv2d:
@@ -8,16 +9,26 @@ def init_W(L):
 
 
 def try_gpu(i=0):
+    """
+    -> 使用gpu, 找不到gpu 使用 cpu
+
+    param:
+        *``i :int`` gpu下标
+
+    return:
+       :torch.device
+
+    """
     if torch.cuda.device_count() >= i+1:
         return torch.device(f'cuda:{i}')
     return torch.device('cpu')
+
 
 def train_net(net, data, optimizer, criterion, init_func):
     """
     -> 训练网络
 
     param:
-
       *``net: nn.Model`` 要训练的网络
       *``data: torch.utils.data.TensorDataset`` 训练数据集
       *``optimizer: torch.optim`` 优化器
@@ -25,11 +36,9 @@ def train_net(net, data, optimizer, criterion, init_func):
       *``init_func: funtion`` 用于初始化参数的方法
 
     return:
-      
-      train_losses: list
+      train_losses: torch.device
 
     """
-
     net.to(try_gpu(0))
 
     train_losses = []
@@ -63,3 +72,4 @@ def get_dataset(dataset, batch_size:int = 16, shuffle:bool = True, num_workers:i
         shuffle = shuffle,
         num_workers = num_workers,
         )
+

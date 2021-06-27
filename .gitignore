@@ -2,3 +2,5 @@
 /classify-leaves
 /test.py
 /__pycache__
+.vscode
+note.md
